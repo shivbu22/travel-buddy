@@ -14,3 +14,4 @@ server/verification-private/
 .venv/
 venv/
 __pycache__/
+.github/
