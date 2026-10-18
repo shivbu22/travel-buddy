@@ -1,0 +1,32 @@
+services:
+  api:
+    build:
+      context: .
+      target: runtime
+    image: raahi-api:${RELEASE_TAG:-local}
+    env_file:
+      - path: server/.env.production
+        required: false
+    ports: ["127.0.0.1:4000:4000"]
+    volumes:
+      - public-media:/data/uploads
+      - private-verification:/data/verification
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp:size=128m"]
+    mem_limit: 768m
+    cpus: 1.5
+    pids_limit: 100
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+  migrate:
+    build:
+      context: .
+      target: migrate
+    env_file:
+      - path: server/.env.production
+        required: false
+    profiles: [tools]
+volumes:
+  public-media:
+  private-verification:

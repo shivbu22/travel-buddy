@@ -1,0 +1,31 @@
+# Upload only the workspaces required to build the mobile app.
+/*
+!/package.json
+!/package-lock.json
+!/mobile
+!/packages
+!/server
+
+# npm needs the server workspace manifest, not its private data or API source.
+/server/*
+!/server/package.json
+
+# Generated files, local sessions, environment files and signing material.
+node_modules/
+.expo/
+dist/
+dist-web/
+dist-ios/
+coverage/
+.env
+.env.*
+*.log
+credentials.json
+*.p8
+*.p12
+*.mobileprovision
+.DS_Store
+
+# Let EAS prebuild the native projects from the Expo configuration.
+/mobile/ios/
+/mobile/android/

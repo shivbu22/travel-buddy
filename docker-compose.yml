@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: raahi
+      POSTGRES_PASSWORD: raahi
+      POSTGRES_DB: raahi
+    ports: ["55432:5432"]
+    volumes: ["raahi-postgres:/var/lib/postgresql/data"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raahi -d raahi"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+volumes:
+  raahi-postgres:

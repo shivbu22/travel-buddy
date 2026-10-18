@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/.env
+**/.env.*
+**/uploads
+**/verification-private
+**/*.log
+**/.expo
+**/coverage
+.git
+backups
+stitch_hinge_dating_app_clone

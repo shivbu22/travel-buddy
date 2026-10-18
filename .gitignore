@@ -1,0 +1,16 @@
+node_modules/
+.expo/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+!.env.production.example
+server/prisma/dev.db
+*.log
+server/uploads/
+server/verification-private/
+
+.venv/
+venv/
+__pycache__/

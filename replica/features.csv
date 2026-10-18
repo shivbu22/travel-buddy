@@ -1,0 +1,16 @@
+feature,area,priority,original,clone,notes
+Priority Likes (Likes stay pinned to top of recipient queue),likes,must,yes,yes,Server-authoritative priority sorting in incoming queue
+Enhanced Recommendations (real-time adaptive feed ranking based on compatibility),discover,must,yes,yes,Pace compatibility and budget overlap scoring
+Unlimited Daily Likes (bypass free 8 likes/day limit),discover,must,yes,yes,Server-enforced quota bypass for HingeX and Plus members
+See Everyone Who Likes You Grid View (browse full gallery instead of 1 at a time),likes you,must,yes,yes,Full grid rendered for HingeX; 1-like teaser for free tier
+HingeX Subscription Paywall Screen (Free vs Plus vs HingeX comparison with tier selector),monetization,must,yes,yes,PaywallModal with plan comparison matrix and real-time discount badges
+Subscription purchase and upgrade flow (1 mo 3 mo 6 mo billing cycles),monetization,must,yes,yes,Complete simulated upgrade API and client store integration
+Subscription status and auto-renew management in Settings,monetization,must,yes,yes,Settings section with tier status auto-renew cancel and restore
+Server-authoritative entitlement enforcement (daily quota and priority gating),backend,must,yes,yes,Postgres advisory locks with transaction-safe quota checking
+Advanced Preferences and Strict Dealbreakers (verified only same pace budget),filters,should,yes,yes,Dealbreakers preference model with feed filtering
+HingeX VIP Badge on profile and header,profile,should,yes,yes,Gold HingeXBadge rendered across profile Discover header and cards
+Priority Like Badge on incoming interest cards,likes you,should,yes,yes,PriorityBanner displayed on incoming interest cards
+Restore purchases functionality,monetization,should,yes,yes,Restore API endpoint and store action to re-verify entitlements
+Free weekly Boost or Rose perk simulation,perks,could,yes,yes,Simulated super interest integration with HingeX
+Custom opening note with Priority Like,likes,could,yes,yes,Optional comment and targeted like interaction supported
+Third-party proprietary match prediction AI,algorithm,could,yes,skip,Clean-room deterministic scoring used instead

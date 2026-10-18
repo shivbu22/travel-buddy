@@ -1,0 +1,23 @@
+version: 1
+mode: human-approval
+auto_merge: false
+required_checks:
+  - typecheck
+  - test
+  - lint
+deny_paths:
+  - "**/.env"
+  - "**/.env.*"
+  - "**/auth/**"
+  - "**/credentials/**"
+  - "**/secrets/**"
+  - "server/prisma/migrations/**"
+  - "Dockerfile"
+  - "docker-compose.yml"
+  - "mobile/src/theme.ts"
+  - "mobile/src/ui.tsx"
+human_review_paths:
+  - "mobile/src/store.ts"
+  - "mobile/src/api.ts"
+  - "mobile/src/api-address.ts"
+  - "server/src/**"

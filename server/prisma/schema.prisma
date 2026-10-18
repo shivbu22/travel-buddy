@@ -1,0 +1,297 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  phone       String?  @unique
+  appleId     String?  @unique
+  appleRefreshTokenEncrypted String?
+  name        String   @default("")
+  age         Int      @default(18)
+  gender      String   @default("Non-binary")
+  city        String   @default("")
+  bio         String   @default("") @db.VarChar(300)
+  languages   String[] @default([])
+  styles      String[] @default([])
+  pace        String   @default("Balanced")
+  safety      String   @default("open")
+  intent      String   @default("Meaningful connection")
+  hometown    String   @default("")
+  occupation  String   @default("")
+  education   String   @default("")
+  heightCm    Int?
+  relationshipGoal String @default("")
+  onboarded   Boolean  @default(false)
+  verified    Boolean  @default(false)
+  verificationStatus String @default("NONE")
+  verificationKey String?
+  verificationSubmittedAt DateTime?
+  verificationReviewedAt DateTime?
+  photos      Photo[]
+  prompts     Prompt[]
+  trips       Trip[]
+  sessions    Session[]
+  location    UserLocation?
+  posts       Post[]
+  postLikes   PostLike[]
+  postComments PostComment[]
+  subscription Subscription?
+  dailyLikes   DailyLike[]
+  dealbreakers DealbreakerPreference?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model UserLocation {
+  userId       String @id
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  latitude     Float
+  longitude    Float
+  accuracy     Float?
+  city         String
+  neighborhood String @default("")
+  updatedAt    DateTime @updatedAt
+}
+
+model Photo {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key       String
+  sortOrder Int
+  @@index([userId, sortOrder])
+}
+
+model Prompt {
+  id       String @id @default(uuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question String
+  answer   String @db.VarChar(500)
+  sortOrder Int @default(0)
+}
+
+model Trip {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  city        String
+  country     String
+  key         String
+  start       DateTime @db.Date
+  end         DateTime @db.Date
+  flexible    Boolean  @default(false)
+  budgetMin   Int
+  budgetMax   Int
+  currency    String   @default("INR")
+  styles      String[]
+  description String   @db.VarChar(500)
+  status      String   @default("OPEN")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([key, status, start, end])
+  @@index([userId, status])
+}
+
+model Interest {
+  id           String   @id @default(uuid())
+  fromUserId   String
+  toUserId     String
+  tripId       String
+  kind         String
+  target       String   @default("profile")
+  targetIndex  Int?
+  targetId     String?
+  targetText   String?
+  source       String   @default("discover")
+  dismissedAt  DateTime?
+  comment      String?
+  isPriority   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  @@unique([fromUserId, toUserId])
+  @@index([toUserId, isPriority, createdAt])
+}
+
+model Pass {
+  fromUserId String
+  toUserId   String
+  @@id([fromUserId, toUserId])
+}
+
+model Match {
+  id            String   @id @default(uuid())
+  pairKey       String   @unique
+  userAId       String
+  userBId       String
+  tripId        String
+  ended         Boolean  @default(false)
+  messages      Message[]
+  reads         ReadState[]
+  createdAt     DateTime @default(now())
+  @@index([userAId, ended])
+  @@index([userBId, ended])
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversationId String
+  conversation   Match    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  body           String
+  clientId       String
+  createdAt      DateTime @default(now())
+  @@unique([senderId, clientId])
+  @@index([conversationId, createdAt])
+}
+
+model ReadState {
+  conversationId String
+  conversation   Match @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  lastReadAt     DateTime @default(now())
+  @@id([conversationId, userId])
+}
+
+model Block {
+  blockerId String
+  blockedId String
+  createdAt DateTime @default(now())
+  @@id([blockerId, blockedId])
+  @@index([blockedId])
+}
+
+model Report {
+  id             String   @id @default(uuid())
+  reporterId     String
+  reportedUserId String
+  reason         String
+  details        String
+  status         String   @default("open")
+  createdAt      DateTime @default(now())
+  @@index([status, createdAt])
+}
+
+model OtpChallenge {
+  phone      String   @id
+  hash       String
+  attempts   Int      @default(0)
+  expiresAt  DateTime
+  updatedAt  DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hash      String   @unique
+  expiresAt DateTime
+  reauthenticatedAt DateTime?
+  reauthChallenge ReauthChallenge?
+  createdAt DateTime @default(now())
+}
+
+model ReauthChallenge {
+  sessionId String @id
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  method String
+  hash String
+  providerSid String?
+  attempts Int @default(0)
+  expiresAt DateTime
+  sentAt DateTime @default(now())
+}
+
+model DeviceToken {
+  token     String @id
+  userId    String
+  enabled   Boolean @default(true)
+}
+
+model Post {
+  id        String        @id @default(uuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  caption   String        @db.VarChar(500)
+  city      String
+  country   String
+  media     PostMedia[]
+  likes     PostLike[]
+  comments  PostComment[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  @@index([createdAt])
+  @@index([userId, createdAt])
+}
+
+model PostMedia {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  key       String
+  sortOrder Int
+  @@unique([postId, sortOrder])
+}
+
+model PostLike {
+  postId    String
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@id([postId, userId])
+  @@index([userId])
+}
+
+model PostComment {
+  id        String   @id @default(uuid())
+  postId    String
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body      String   @db.VarChar(500)
+  createdAt DateTime @default(now())
+  @@index([postId, createdAt])
+}
+
+model Subscription {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan             String   @default("FREE")
+  status           String   @default("ACTIVE")
+  billingCycle     String   @default("MONTHLY")
+  startedAt        DateTime @default(now())
+  currentPeriodEnd DateTime
+  autoRenew        Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  @@index([userId, plan, status])
+}
+
+model DailyLike {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime @db.Date
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+model DealbreakerPreference {
+  userId              String   @id
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  strictVerifiedOnly  Boolean  @default(false)
+  strictSamePace      Boolean  @default(false)
+  strictBudgetOverlap Boolean  @default(false)
+  updatedAt           DateTime @updatedAt
+}
+

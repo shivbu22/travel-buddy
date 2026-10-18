@@ -1,0 +1,32 @@
+{
+  "name": "raahi",
+  "private": true,
+  "workspaces": [
+    "mobile",
+    "server",
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "npm --workspace mobile start",
+    "mobile:lan": "npm --workspace mobile start -- --lan --max-workers 2",
+    "server:dev": "npm --workspace server run start:dev",
+    "build:contracts": "npm --workspace @raahi/contracts run build",
+    "typecheck": "npm run build:contracts && npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint mobile/src mobile/app mobile/tests server/src server/test packages/contracts/src --max-warnings=0",
+    "smoke:api": "node scripts/smoke-api.mjs",
+    "build": "npm run build:contracts && npm --workspace @raahi/server run build",
+    "db:up": "docker compose up -d",
+    "db:setup": "npm --workspace @raahi/server run db:generate && npm --workspace @raahi/server run db:migrate && npm --workspace @raahi/server run db:seed"
+  },
+  "overrides": {
+    "fastify": "5.12.5",
+    "deepmerge-ts": "8.0.2",
+    "tinypool": "2.1.2",
+    "decode-uri-component": "0.5.0"
+  },
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1"
+  }
+}

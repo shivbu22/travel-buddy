@@ -1,0 +1,31 @@
+:root {
+  --color-bg: #121016;
+  --color-surface: #1E1A24;
+  --color-surface-raised: #2A2433;
+  --color-border: #3D354A;
+  --color-border-input: #6C6080;
+  --color-text: #F5F3F7;
+  --color-text-muted: #B5ADC4;
+  --color-accent: #F5C451;
+  --color-on-accent: #1A1508;
+  --color-accent-gold: #E5B338;
+  --color-danger: #FF6B6B;
+  --color-success: #3DD68C;
+
+  --font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --font-serif: Georgia, Cambria, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  --shadow-card: 0 2px 8px rgba(0,0,0,.28);
+  --shadow-pop: 0 14px 36px rgba(0,0,0,.45);
+  --shadow-gold-glow: 0 0 20px rgba(245,196,81,.28);
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+}
